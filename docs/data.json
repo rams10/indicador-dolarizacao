@@ -1,0 +1,17 @@
+{
+  "updated_at": null,
+  "source": {
+    "name": "Banco Central do Brasil — SGS série 1",
+    "description": "Taxa de câmbio livre: dólar americano (venda), frequência diária",
+    "series_code": 1,
+    "url": "https://dadosabertos.bcb.gov.br/dataset/1-taxa-de-cambio---livre---dolar-americano-venda---diario"
+  },
+  "method": {
+    "weekly_close": "Última observação diária disponível em cada semana (semana ISO)",
+    "rolling_max": "Maior fechamento diário nos 12 meses anteriores à data do fechamento semanal, inclusive",
+    "formula": "(1 - fechamento_semanal / maior_fechamento_diario_12m) * 100",
+    "threshold_pct": 5.0
+  },
+  "latest": null,
+  "history": []
+}
