@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#101827">
-  <meta name="description" content="Indicador semanal de queda do dólar em relação à maior cotação diária dos últimos 12 meses.">
+  <meta name="description" content="Indicador diário de queda do dólar em relação à maior cotação diária dos últimos 12 meses.">
   <title>Indicador de Dolarização</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
@@ -24,7 +24,7 @@
   <header>
     <div class="eyebrow">Painel de acompanhamento cambial</div>
     <h1>Indicador de Dolarização</h1>
-    <p class="subtitle">Mede quanto o dólar recuou em relação à maior cotação diária de venda dos últimos 12 meses. A referência é atualizada semanalmente.</p>
+    <p class="subtitle">Mede quanto o dólar recuou em relação à maior cotação diária de venda dos últimos 12 meses. A referência é atualizada diariamente em dias úteis, conforme a publicação do Banco Central.</p>
   </header>
   <section class="hero">
     <div class="card signal">
@@ -35,7 +35,7 @@
       <div class="progress-label"><span>0%</span><strong>Gatilho de aporte: 5%</strong></div>
     </div>
     <div class="card side-stat">
-      <div class="stat"><div class="label">Último fechamento semanal</div><div class="value" id="close">—</div><div class="unit" id="close-date">Data ainda indisponível</div></div>
+      <div class="stat"><div class="label">Última cotação diária</div><div class="value" id="close">—</div><div class="unit" id="close-date">Data ainda indisponível</div></div>
       <div class="stat"><div class="label">Maior fechamento em 12 meses</div><div class="value" id="maximum">—</div><div class="unit">Janela móvel de 12 meses</div></div>
     </div>
   </section>
@@ -45,26 +45,26 @@
     <div class="card"><div class="label">Atualização do painel</div><div class="value" id="updated" style="font-size:19px">—</div><div class="unit">Horário de Brasília</div></div>
   </section>
   <section class="card chart-card">
-    <div class="chart-title">Histórico semanal da queda</div>
-    <div class="unit">Cada ponto representa a última cotação diária disponível na respectiva semana. A linha tracejada marca o gatilho de 5%.</div>
+    <div class="chart-title">Histórico diário da queda</div>
+    <div class="unit">Cada ponto representa uma observação diária publicada pelo Banco Central. A linha tracejada marca o gatilho de 5%.</div>
     <div class="chart-wrap"><canvas id="dropChart"></canvas></div>
   </section>
   <section class="card chart-card">
-    <div class="chart-title">Fechamento semanal x máxima móvel de 12 meses</div>
+    <div class="chart-title">Cotação diária x máxima móvel de 12 meses</div>
     <div class="unit">Valores em reais por dólar, conforme a série diária do Banco Central.</div>
     <div class="chart-wrap"><canvas id="rateChart"></canvas></div>
   </section>
   <section class="card chart-card">
-    <div class="chart-title">Últimas observações semanais</div>
+    <div class="chart-title">Últimas observações diárias</div>
     <div class="table-wrap"><table><thead><tr><th>Data</th><th>Fechamento</th><th>Máxima 12m</th><th>Queda</th></tr></thead><tbody id="historyRows"><tr><td colspan="4">Aguardando dados…</td></tr></tbody></table></div>
   </section>
   <section class="card formula">
     <div class="chart-title">Como o indicador é calculado</div>
-    <div class="formula-box">Queda (%) = (1 − fechamento semanal ÷ maior fechamento diário dos últimos 12 meses) × 100</div>
-    <p class="foot">A máxima de referência considera apenas fechamentos diários publicados dentro da janela móvel de 12 meses, incluindo a data do fechamento semanal. Em semanas com feriado, é utilizada a última observação disponível naquela semana.</p>
+    <div class="formula-box">Queda (%) = (1 − cotação diária ÷ maior cotação diária dos últimos 12 meses) × 100</div>
+    <p class="foot">A máxima de referência considera apenas fechamentos diários publicados dentro da janela móvel de 12 meses, incluindo a própria data da observação. Em fins de semana e feriados, o painel mantém a última cotação oficialmente divulgada.</p>
   </section>
   <p class="foot" id="sourceText">Fonte: Banco Central do Brasil, SGS série 1 — taxa de câmbio livre, dólar americano (venda), periodicidade diária.</p>
-  <p class="foot">Este indicador é uma referência estatística, não uma recomendação automática de compra. A cotação de referência não representa necessariamente o preço final pago para dolarizar: spread, tarifas, IOF, custos de corretora e diferenças entre produtos não estão incluídos. A atualização semanal pode sofrer atraso de publicação ou de execução do GitHub Actions.</p>
+  <p class="foot">Este indicador é uma referência estatística, não uma recomendação automática de compra. A cotação de referência não representa necessariamente o preço final pago para dolarizar: spread, tarifas, IOF, custos de corretora e diferenças entre produtos não estão incluídos. A atualização diária em dias úteis pode sofrer atraso de publicação ou de execução do GitHub Actions.</p>
   <div class="source"><a href="https://dadosabertos.bcb.gov.br/dataset/1-taxa-de-cambio---livre---dolar-americano-venda---diario" target="_blank" rel="noopener">Consultar a série no Banco Central</a><span class="unit">·</span><span class="unit" id="lastRecord">Sem dados carregados</span></div>
 </main>
 <script>
@@ -82,7 +82,7 @@ function drawCharts(history){
   ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#c3d2e5'}}},scales:{x:{ticks:{color:'#9aabc2',maxTicksLimit:8},grid:{color:'rgba(41,58,84,.55)'}},y:{beginAtZero:true,ticks:{color:'#9aabc2',callback:v=>v+'%'},grid:{color:'rgba(41,58,84,.55)'}}}}});
   if(rateChart)rateChart.destroy();
   rateChart=new Chart(document.getElementById('rateChart'),{type:'line',data:{labels,datasets:[
-    {label:'Fechamento semanal',data:history.map(x=>x.close),borderColor:'#82b8ff',tension:.2,pointRadius:1,borderWidth:2},
+    {label:'Cotação diária',data:history.map(x=>x.close),borderColor:'#82b8ff',tension:.2,pointRadius:1,borderWidth:2},
     {label:'Máxima móvel de 12 meses',data:history.map(x=>x.max_12m),borderColor:'#f2bd58',borderDash:[5,4],tension:.2,pointRadius:0,borderWidth:1.5}
   ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#c3d2e5'}}},scales:{x:{ticks:{color:'#9aabc2',maxTicksLimit:8},grid:{color:'rgba(41,58,84,.55)'}},y:{ticks:{color:'#9aabc2',callback:v=>'R$ '+Number(v).toFixed(2).replace('.',',')},grid:{color:'rgba(41,58,84,.55)'}}}}});
 }
@@ -91,7 +91,7 @@ async function load(){
     const response=await fetch('./data.json?ts='+Date.now(),{cache:'no-store'});
     if(!response.ok)throw new Error('Ainda não há atualização publicada.');
     const data=await response.json();
-    if(!data.latest||!Array.isArray(data.history)||!data.history.length)throw new Error('Aguardando a primeira execução do atualizador semanal.');
+    if(!data.latest||!Array.isArray(data.history)||!data.history.length)throw new Error('Aguardando a primeira execução do atualizador diário.');
     const q=data.latest,hit=q.drop_pct>=threshold;
     document.getElementById('drop').textContent=pct(q.drop_pct);
     document.getElementById('drop').className='big '+(hit?'hit':'wait');
