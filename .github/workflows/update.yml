@@ -8,6 +8,7 @@ on:
       - "monitor.py"
       - "docs/index.html"
       - "tests/test_monitor.py"
+      - ".github/workflows/update.yml"
   schedule:
     # Dias úteis às 18:30 em Brasília (21:30 UTC).
     - cron: "30 21 * * 1-5"
@@ -39,4 +40,8 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add docs/data.json
-          git diff --cached --quiet || (git commit -m "Atualiza indicador diário do dólar" && git push)
+          if ! git diff --cached --quiet; then
+            git commit -m "Atualiza indicador diário do dólar"
+            git pull --rebase origin main
+            git push
+          fi
