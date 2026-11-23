@@ -1,4 +1,4 @@
-"""Atualiza o indicador semanal de queda do dólar usando a série SGS 1 do BCB."""
+"""Atualiza o indicador diário de queda do dólar usando a série SGS 1 do BCB."""
 from __future__ import annotations
 
 import datetime as dt
@@ -44,14 +44,9 @@ def build_payload(rows: list[tuple[dt.date, float]], now: dt.datetime) -> dict:
     rows = sorted(rows)
     display_start = now.date() - dt.timedelta(days=DISPLAY_DAYS)
 
-    # Um ponto por semana: a última observação diária divulgada naquela semana.
-    by_week: dict[tuple[int, int], tuple[dt.date, float]] = {}
-    for day, rate in rows:
-        iso = day.isocalendar()
-        by_week[(iso.year, iso.week)] = (day, rate)
-
+    # Um ponto por observação diária publicada pelo Banco Central.
     history = []
-    for day, weekly_close in sorted(by_week.values()):
+    for day, daily_close in rows:
         if day < display_start:
             continue
         window_start = one_year_before(day)
@@ -59,10 +54,10 @@ def build_payload(rows: list[tuple[dt.date, float]], now: dt.datetime) -> dict:
         if not window:
             continue
         maximum = max(window)
-        decline = max(0.0, (1.0 - weekly_close / maximum) * 100.0)
+        decline = max(0.0, (1.0 - daily_close / maximum) * 100.0)
         history.append({
             "date": day.isoformat(),
-            "close": round(weekly_close, 4),
+            "close": round(daily_close, 4),
             "max_12m": round(maximum, 4),
             "drop_pct": round(decline, 4),
         })
@@ -80,13 +75,13 @@ def build_payload(rows: list[tuple[dt.date, float]], now: dt.datetime) -> dict:
             "url": "https://dadosabertos.bcb.gov.br/dataset/1-taxa-de-cambio---livre---dolar-americano-venda---diario",
         },
         "method": {
-            "weekly_close": "Última observação diária disponível em cada semana (semana ISO)",
+            "daily_close": "Cada observação diária publicada pelo Banco Central",
             "rolling_max": "Maior fechamento diário nos 12 meses anteriores à data do fechamento semanal, inclusive",
             "formula": "(1 - fechamento_semanal / maior_fechamento_diario_12m) * 100",
             "threshold_pct": THRESHOLD_PCT,
         },
         "latest": latest,
-        "history": history[-60:],
+        "history": history[-400:],
     }
 
 
@@ -121,7 +116,7 @@ def main() -> None:
     latest = result["latest"]
     print(json.dumps({
         "date": latest["date"],
-        "weekly_close": latest["close"],
+        "daily_close": latest["close"],
         "max_12m": latest["max_12m"],
         "drop_pct": latest["drop_pct"],
         "threshold_reached": latest["drop_pct"] >= THRESHOLD_PCT,
