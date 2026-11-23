@@ -1,4 +1,4 @@
-# Indicador de Dolarização
+# Indicador Diário de Dolarização
 
 Projeto independente para acompanhar a queda do dólar em relação à maior cotação diária de venda divulgada pelo Banco Central nos últimos 12 meses.
 
@@ -7,10 +7,10 @@ Projeto independente para acompanhar a queda do dólar em relação à maior cot
 `Queda (%) = (1 - fechamento semanal / maior fechamento diário dos últimos 12 meses) * 100`
 
 - Referência: Banco Central do Brasil, SGS série 1 — taxa de câmbio livre, dólar americano (venda), periodicidade diária.
-- Fechamento semanal: última observação diária disponível em cada semana. Em semanas com feriados, usa o último registro divulgado naquela semana.
+- Observação diária: cada registro diário publicado pelo Banco Central. Em fins de semana e feriados, permanece exibida a última observação disponível.
 - Máxima de referência: maior valor diário dentro dos 12 meses anteriores ao fechamento semanal, incluindo o próprio dia.
 - Gatilho visual inicial: queda igual ou superior a 5%.
-- Atualização automática: sábado às 08:15 (horário de Brasília), com execução manual disponível em GitHub Actions.
+- Atualização automática: dias úteis às 18:30 (horário de Brasília), com execução manual disponível em GitHub Actions.
 
 Fonte e metadados: https://dadosabertos.bcb.gov.br/dataset/1-taxa-de-cambio---livre---dolar-americano-venda---diario
 
