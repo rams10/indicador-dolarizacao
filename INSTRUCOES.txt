@@ -1,9 +1,10 @@
-INDICADOR DE DOLARIZAÇÃO — REPOSITÓRIO INDEPENDENTE
+INDICADOR DIÁRIO DE DOLARIZAÇÃO — REPOSITÓRIO INDEPENDENTE
 
 1. Repositório: https://github.com/rams10/indicador-dolarizacao
 2. Em Settings > Actions > General > Workflow permissions, habilite Read and write permissions.
 3. Em Settings > Pages, escolha Deploy from a branch, branch main e pasta /docs.
-4. Em Actions, execute manualmente “Atualização semanal do dólar” para fazer a primeira coleta.
-5. O painel será publicado em https://rams10.github.io/indicador-dolarizacao/
+4. A rotina automática consulta os dados em dias úteis às 18:30 (horário de Brasília). Em fins de semana e feriados, o painel mantém a última observação publicada pelo Banco Central.
+5. Para iniciar uma coleta manual, abra Actions > Atualização diária do dólar > Run workflow.
+6. O painel é publicado em https://rams10.github.io/indicador-dolarizacao/
 
 Não requer Secrets nem credenciais. O projeto não altera o repositório bradesco-arbitragem-monitor.
