@@ -10,8 +10,9 @@ on:
       - "tests/test_monitor.py"
       - ".github/workflows/update.yml"
   schedule:
-    # Dias úteis às 18:30 em Brasília (21:30 UTC).
-    - cron: "30 21 * * 1-5"
+    # Dias úteis às 18:30 no horário de Recife.
+    - cron: "30 18 * * 1-5"
+      timezone: "America/Recife"
   workflow_dispatch:
 
 permissions:
