@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-27T00:43:45.641029-03:00",
+  "updated_at": "2026-11-28T00:27:20.133090-03:00",
   "source": {
     "name": "Banco Central do Brasil — SGS série 1",
     "description": "Taxa de câmbio livre: dólar americano (venda), frequência diária",
@@ -13,18 +13,12 @@
     "threshold_pct": 5.0
   },
   "latest": {
-    "date": "2026-11-26",
-    "close": 5.7446,
+    "date": "2026-11-27",
+    "close": 5.543,
     "max_12m": 5.9708,
-    "drop_pct": 3.7884
+    "drop_pct": 7.1649
   },
   "history": [
-    {
-      "date": "2025-11-27",
-      "close": 5.349,
-      "max_12m": 6.2086,
-      "drop_pct": 13.8453
-    },
     {
       "date": "2025-11-28",
       "close": 5.3338,
@@ -1512,6 +1506,12 @@
       "close": 5.7446,
       "max_12m": 5.9708,
       "drop_pct": 3.7884
+    },
+    {
+      "date": "2026-11-27",
+      "close": 5.543,
+      "max_12m": 5.9708,
+      "drop_pct": 7.1649
     }
   ]
 }
